@@ -62,51 +62,34 @@
 				"name": "getTask",
 				"outputs": [
 					{
-						"components": [
-							{
-								"internalType": "uint256",
-								"name": "taskId",
-								"type": "uint256"
-							},
-							{
-								"internalType": "string",
-								"name": "name",
-								"type": "string"
-							},
-							{
-								"internalType": "string",
-								"name": "description",
-								"type": "string"
-							},
-							{
-								"internalType": "uint256",
-								"name": "priority",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "dueDate",
-								"type": "uint256"
-							},
-							{
-								"internalType": "address",
-								"name": "assignedTo",
-								"type": "address"
-							},
-							{
-								"internalType": "bool",
-								"name": "isCompleted",
-								"type": "bool"
-							},
-							{
-								"internalType": "uint256",
-								"name": "completedAt",
-								"type": "uint256"
-							}
-						],
-						"internalType": "struct TaskManagement.Task",
-						"name": "",
-						"type": "tuple"
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "priorty",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "isCompleted",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dueDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "completedAt",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -263,11 +246,11 @@
 	},
 	"sources": {
 		"contracts/TaskManagement.sol": {
-			"keccak256": "0x8e2775c6343d2f13cfccf39186f74a8f8b04fcbb08c9af8ff3cda3277293f109",
+			"keccak256": "0x176a47f60c5c41232e3c5a1006e109a1e88656db8289aa49f553212215ff4d5c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://32c2cc87f1c2ae99df5fd9619dc609e0d2d23204c96590a9e714367b346e438b",
-				"dweb:/ipfs/QmRjM41FuDenfYsFcGQychK4KabWzXQ5XTnyTJQNLndxJP"
+				"bzz-raw://3448fdd24d9d12ed49220d483437d3b7ac3ff939a0ef224aa2c1d80eea48758a",
+				"dweb:/ipfs/QmTJSLC2pw8Q7TR6dCqLBySmn9URwTnShp4XtVMkM7FWqG"
 			]
 		}
 	},

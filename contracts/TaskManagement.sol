@@ -31,11 +31,18 @@ contract TaskManagement {
         return userTasks;
     }
 
-    function getTask(uint _taskId) public view returns (Task memory) {
+    function getTask(uint _taskId) public view returns (
+        string memory name, 
+        string memory description, 
+        uint priorty,
+        bool isCompleted, 
+        uint dueDate,
+        uint completedAt
+    ) {
         Task storage task = tasks[_taskId];
         require(msg.sender == task.assignedTo, "Not authorized");
 
-        return task;
+        return (task.name, task.description, task.priority, task.isCompleted, task.dueDate, task.completedAt);
     }
 
     function createTask(
