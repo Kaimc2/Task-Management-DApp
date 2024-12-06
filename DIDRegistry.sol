@@ -1,17 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-/**
- * @title DIDRegistry
- * @dev Contract to store and manage DIDs
- * 
- * Authors:
- * - Kong Phirom
- * - Hul Sambath
- * - Prak Pichey
- * - Him Ronald
- * - Chhim Kakada
- */
+// Kong Phirom
+// Hul Sambath
+// Prak Pichey
+// Him Ronald
+// Chhim Kakada
 
 contract DIDRegistry {
     // Contract will store and manage DIDs
@@ -26,7 +20,6 @@ contract DIDRegistry {
         string profilePicture;
     }
 
-    // 
     struct Credential {
         address issuer;
         string role;
@@ -96,7 +89,6 @@ contract DIDRegistry {
     ) public {
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
         require(bytes(_email).length > 0, "Email cannot be empty"); // email is important for $reason$
-        // email is cannot be empty because it is use to link between the decentralized world and traditional systems
 
         metadata[msg.sender] = Metadata(
             _name,
@@ -112,7 +104,6 @@ contract DIDRegistry {
         return metadata[msg.sender];
     }
 
-    // Allow a manager to assign role to a user
     function assignRole(address _user, string memory _role) onlyManager public {
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
         require(bytes(_role).length > 0, "Role cannot be empty");
@@ -120,19 +111,15 @@ contract DIDRegistry {
         roles[_user] = _role;
         roleHistory[_user].push(_role);
 
-        emit RoleAssigned(_user, _role); // RoleAssigned event is emitted to log the assignment.
+        emit RoleAssigned(_user, _role);
     }
 
-    // Similar to assignRole, It performs the same checks for an existing DID and non-empty role. This is used for verify user's role.
     function issueRole(address _user, string memory _role) onlyManager public {
-        // checks for an existing DID and non-empty role.
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
         require(bytes(_role).length > 0, "Role cannot be empty");
 
-        // generates a unique roleHash
         bytes32 roleHash = keccak256(abi.encodePacked(msg.sender, _user, _role, block.timestamp));
 
-        // store the new Credential in the Credentials[_user] mapping for the user
         credentials[_user] = Credential(
             msg.sender,
             _role,
@@ -141,10 +128,9 @@ contract DIDRegistry {
         );
         roleHistory[_user].push(_role);
 
-        emit RoleIssued(msg.sender, _user, _role, roleHash); // RoleIssued event is emitted to log the issuance at here
+        emit RoleIssued(msg.sender, _user, _role, roleHash);
     }
 
-    // This function allows a user to retrieve their assigned roles. If the user has no roles assigned, it throws an error.
     function getRole() public view returns (string[] memory) {
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
 
@@ -152,9 +138,9 @@ contract DIDRegistry {
         string[] memory userRoles = roleHistory[msg.sender];
 
         //if you got 0, it mean u dont have role yet
+        //if you didn't get 0, return that array. 
         require(userRoles.length > 0, "No roles assigned for this user");
 
-        //if you didn't get 0, return that array. 
         return userRoles;
     }
 }
