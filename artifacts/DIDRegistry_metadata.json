@@ -253,8 +253,10 @@
 			}
 		],
 		"devdoc": {
+			"details": "Contract to store and manage DIDs  Authors: - Kong Phirom - Hul Sambath - Prak Pichey - Him Ronald - Chhim Kakada",
 			"kind": "dev",
 			"methods": {},
+			"title": "DIDRegistry",
 			"version": 1
 		},
 		"userdoc": {
@@ -280,11 +282,11 @@
 	},
 	"sources": {
 		"DIDRegistry.sol": {
-			"keccak256": "0xfa8c90a503c4c006929ad32166a7fa529378b3de7ce707a0d1ac4cfd13cb3548",
+			"keccak256": "0x3b47891aa0b31e958453c05489f3af10b6b983fad27f7bd31399d3a1783d4ddb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://44862d667f00038ac4fb25a51e264e8db5ea82b53c09000e15cdd72a1479c01c",
-				"dweb:/ipfs/QmVcUgfbgrZkuHhDfncmeHYKo2oDTeerfRNVQLkbEckGEz"
+				"bzz-raw://9e4d68cc612b25226e1346e6f67033dec221742bdf5899b92a6f8cfb399b5d81",
+				"dweb:/ipfs/QmdZNAfBQmUghvZ3Ef2yW9D873WjL3cAosa9YQeV3Av527"
 			]
 		}
 	},

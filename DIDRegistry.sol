@@ -26,7 +26,6 @@ contract DIDRegistry {
         string profilePicture;
     }
 
-    // 
     struct Credential {
         address issuer;
         string role;
@@ -41,8 +40,8 @@ contract DIDRegistry {
     mapping(address => Metadata) private metadata;
     mapping(address => Credential) private credentials;
 
+    // Ensures that the caller has the "manager" role.
     modifier onlyManager {
-        // Verify that the issuer has manager role
         require(keccak256(bytes(roles[msg.sender])) == keccak256(bytes("manager")), "Unauthorized action");
         _;
     }
@@ -52,9 +51,11 @@ contract DIDRegistry {
         roleHistory[msg.sender].push("manager");
     }
 
-    // event DIDCreated: Define an event
-    // address indexed owner: Logs the user's address (indexed for easy search)
-    // string identifier: Logs the created DID
+    /* 
+    * event DIDCreated: Define an event
+    * address indexed owner: Logs the user's address (indexed for easy search)
+    * string identifier: Logs the created DID
+    */
     event DIDCreated(address indexed owner, string identifier);
     event MetadataCreated(address indexed  owner, string name, string email, string profilePicture);
     event RoleAssigned(address indexed user, string role);
@@ -95,8 +96,8 @@ contract DIDRegistry {
         string memory _profilePicture
     ) public {
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
-        require(bytes(_email).length > 0, "Email cannot be empty"); // email is important for $reason$
-        // email is cannot be empty because it is use to link between the decentralized world and traditional systems
+        // email cannot be empty because it is use to link between the decentralized world and traditional systems
+        require(bytes(_email).length > 0, "Email cannot be empty");
 
         metadata[msg.sender] = Metadata(
             _name,
@@ -148,13 +149,13 @@ contract DIDRegistry {
     function getRole() public view returns (string[] memory) {
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
 
-        //get userdid to find in array.
+        // Get user roles array
         string[] memory userRoles = roleHistory[msg.sender];
 
-        //if you got 0, it mean u dont have role yet
+        // if you got 0, it mean you don't have any role yet
         require(userRoles.length > 0, "No roles assigned for this user");
 
-        //if you didn't get 0, return that array. 
+        // if you didn't get 0, return that array. 
         return userRoles;
     }
 }
