@@ -18,7 +18,6 @@ contract DIDRegistry {
         string name;
         string email;
         string profilePicture;
-        string role;
     }
 
     struct Credential {
@@ -35,9 +34,15 @@ contract DIDRegistry {
     mapping(address => Metadata) private metadata;
     mapping(address => Credential) private credentials;
 
+    modifier onlyManager {
+        // Verify that the issuer has manager role
+        require(keccak256(bytes(roles[msg.sender])) == keccak256(bytes("manager")), "Unauthorized action");
+        _;
+    }
+
     constructor() {
-        roles[msg.sender] = "super admin";
-        roleHistory[msg.sender].push("super admin");
+        roles[msg.sender] = "manager";
+        roleHistory[msg.sender].push("manager");
     }
 
     // event DIDCreated: Define an event
@@ -83,13 +88,12 @@ contract DIDRegistry {
         string memory _profilePicture
     ) public {
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
-        require(bytes(_email).length > 0, "Email cannot be empty"); // email is important for encrypting
+        require(bytes(_email).length > 0, "Email cannot be empty"); // email is important for $reason$
 
         metadata[msg.sender] = Metadata(
             _name,
             _email,
-            _profilePicture,
-            "user"
+            _profilePicture
         );
 
         emit MetadataCreated(msg.sender, _name, _email, _profilePicture);
@@ -100,10 +104,8 @@ contract DIDRegistry {
         return metadata[msg.sender];
     }
 
-    function assignRole(address _user, string memory _role) public {
+    function assignRole(address _user, string memory _role) onlyManager public {
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
-        // Verify that the issuer has super admin role
-        require(keccak256(bytes(roles[msg.sender])) == keccak256(bytes("super admin")), "Unauthorized action");
         require(bytes(_role).length > 0, "Role cannot be empty");
 
         roles[_user] = _role;
@@ -112,7 +114,7 @@ contract DIDRegistry {
         emit RoleAssigned(_user, _role);
     }
 
-    function issueRole(address _user, string memory _role) public {
+    function issueRole(address _user, string memory _role) onlyManager public {
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
         require(bytes(_role).length > 0, "Role cannot be empty");
 
@@ -133,10 +135,12 @@ contract DIDRegistry {
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
 
         //get userdid to find in array.
-        
+        string[] memory userRoles = roleHistory[msg.sender];
+
         //if you got 0, it mean u dont have role yet
         //if you didn't get 0, return that array. 
+        require(userRoles.length > 0, "No roles assigned for this user");
 
-        return roleHistory[msg.sender];
+        return userRoles;
     }
 }

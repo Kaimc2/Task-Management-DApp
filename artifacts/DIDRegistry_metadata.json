@@ -174,11 +174,6 @@
 								"internalType": "string",
 								"name": "profilePicture",
 								"type": "string"
-							},
-							{
-								"internalType": "string",
-								"name": "role",
-								"type": "string"
 							}
 						],
 						"internalType": "struct DIDRegistry.Metadata",
@@ -285,11 +280,11 @@
 	},
 	"sources": {
 		"DIDRegistry.sol": {
-			"keccak256": "0xfd281b809624b77f5465d9bd3128895641c8150636c6a58ff7729fc198685513",
+			"keccak256": "0xfa8c90a503c4c006929ad32166a7fa529378b3de7ce707a0d1ac4cfd13cb3548",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9b8c6df171dd97b648439c7076cad443ce7b049a9b822b219da516c3f9eebc41",
-				"dweb:/ipfs/QmYszU2hfRnfSQqLDHExk1qnzhqwaRpGb6voR5YGpnH9Le"
+				"bzz-raw://44862d667f00038ac4fb25a51e264e8db5ea82b53c09000e15cdd72a1479c01c",
+				"dweb:/ipfs/QmVcUgfbgrZkuHhDfncmeHYKo2oDTeerfRNVQLkbEckGEz"
 			]
 		}
 	},
