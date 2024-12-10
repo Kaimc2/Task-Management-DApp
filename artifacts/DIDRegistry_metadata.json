@@ -226,6 +226,30 @@
 						"internalType": "string",
 						"name": "_email",
 						"type": "string"
+					}
+				],
+				"name": "presentCredential",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_email",
+						"type": "string"
 					},
 					{
 						"internalType": "string",
@@ -249,6 +273,25 @@
 				"name": "updateDID",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "presentedHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "verifyCredential",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -282,11 +325,11 @@
 	},
 	"sources": {
 		"DIDRegistry.sol": {
-			"keccak256": "0x3b47891aa0b31e958453c05489f3af10b6b983fad27f7bd31399d3a1783d4ddb",
+			"keccak256": "0xec7fbf6aeba855fbe2f5cd25f960dd37c361871c3524046beb65feeceefdffb0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9e4d68cc612b25226e1346e6f67033dec221742bdf5899b92a6f8cfb399b5d81",
-				"dweb:/ipfs/QmdZNAfBQmUghvZ3Ef2yW9D873WjL3cAosa9YQeV3Av527"
+				"bzz-raw://3bd6adc8c65394d2dc2c9e54833c8ca7e9dd36e85b7282860070aaac1fe01a46",
+				"dweb:/ipfs/QmZ7pQHwo82bUgBGbr1oLxEdbQwUoPTWGCNit3Chpw88gb"
 			]
 		}
 	},

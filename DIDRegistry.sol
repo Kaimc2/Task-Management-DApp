@@ -38,7 +38,7 @@ contract DIDRegistry {
     mapping (address => string) private roles;
     mapping(address => string[]) private roleHistory;
     mapping(address => Metadata) private metadata;
-    mapping(address => Credential) private credentials;
+    mapping(address => Credential[]) private credentials;
 
     // Ensures that the caller has the "manager" role.
     modifier onlyManager {
@@ -121,28 +121,29 @@ contract DIDRegistry {
         roles[_user] = _role;
         roleHistory[_user].push(_role);
 
-        emit RoleAssigned(_user, _role); // RoleAssigned event is emitted to log the assignment.
+        // RoleAssigned event is emitted to log the assignment.
+        emit RoleAssigned(_user, _role); 
     }
 
     // Similar to assignRole, It performs the same checks for an existing DID and non-empty role. This is used for verify user's role.
     function issueRole(address _user, string memory _role) onlyManager public {
-        // checks for an existing DID and non-empty role.
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
         require(bytes(_role).length > 0, "Role cannot be empty");
 
         // generates a unique roleHash
         bytes32 roleHash = keccak256(abi.encodePacked(msg.sender, _user, _role, block.timestamp));
 
-        // store the new Credential in the Credentials[_user] mapping for the user
-        credentials[_user] = Credential(
+        // store the new Credential in the Credentials array for the user
+        credentials[_user].push(Credential(
             msg.sender,
             _role,
             roleHash,
             block.timestamp
-        );
+        ));
         roleHistory[_user].push(_role);
 
-        emit RoleIssued(msg.sender, _user, _role, roleHash); // RoleIssued event is emitted to log the issuance at here
+        // RoleIssued event is emitted to log the issuance at here
+        emit RoleIssued(msg.sender, _user, _role, roleHash); 
     }
 
     // This function allows a user to retrieve their assigned roles. If the user has no roles assigned, it throws an error.
@@ -157,5 +158,28 @@ contract DIDRegistry {
 
         // if you didn't get 0, return that array. 
         return userRoles;
+    }
+
+    // Present a credential by hashing the provided information
+    function presentCredential(string memory _name, string memory _email) public view returns(bytes32)
+    {
+        require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
+
+        // Hash the credential information provided by the user
+        return keccak256(abi.encodePacked(_name, _email));
+    }
+
+    // Verify the credential by comparing it with the stored metadata
+    function verifyCredential(bytes32 presentedHash) public view returns (bool) {
+        require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
+
+        // Retrieve the metadata for the user
+        Metadata memory userMetadata = metadata[msg.sender];
+
+        // Hash the user stored metadata
+        bytes32 storedHash = keccak256(abi.encodePacked(userMetadata.name, userMetadata.email));
+
+        // Compare the presented hash with the stored hash
+        return (presentedHash == storedHash);
     }
 }
