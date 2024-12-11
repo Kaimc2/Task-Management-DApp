@@ -16,6 +16,43 @@
 					{
 						"indexed": true,
 						"internalType": "address",
+						"name": "issuer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "int256",
+						"name": "salary",
+						"type": "int256"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "role",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "roleHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "CredentialIssued",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
 						"name": "owner",
 						"type": "address"
 					},
@@ -90,24 +127,43 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "address",
-						"name": "user",
-						"type": "address"
-					},
-					{
-						"indexed": false,
 						"internalType": "string",
 						"name": "role",
 						"type": "string"
 					},
 					{
 						"indexed": false,
-						"internalType": "bytes32",
-						"name": "roleHash",
-						"type": "bytes32"
+						"internalType": "bool",
+						"name": "status",
+						"type": "bool"
 					}
 				],
-				"name": "RoleIssued",
+				"name": "RoleVerified",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "issuer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "int256",
+						"name": "salary",
+						"type": "int256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "status",
+						"type": "bool"
+					}
+				],
+				"name": "SalaryVerified",
 				"type": "event"
 			},
 			{
@@ -208,11 +264,40 @@
 						"internalType": "string",
 						"name": "_role",
 						"type": "string"
+					},
+					{
+						"internalType": "int256",
+						"name": "_salary",
+						"type": "int256"
 					}
 				],
-				"name": "issueRole",
+				"name": "issueCredential",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_email",
+						"type": "string"
+					}
+				],
+				"name": "presentCredential",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -250,6 +335,83 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "presentedHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "verifyCredential",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_issuer",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_role",
+						"type": "string"
+					}
+				],
+				"name": "verifyRole",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_issuer",
+						"type": "address"
+					},
+					{
+						"internalType": "int256",
+						"name": "_salary",
+						"type": "int256"
+					}
+				],
+				"name": "verifySalary",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -282,11 +444,11 @@
 	},
 	"sources": {
 		"DIDRegistry.sol": {
-			"keccak256": "0x3b47891aa0b31e958453c05489f3af10b6b983fad27f7bd31399d3a1783d4ddb",
+			"keccak256": "0x64b75e56e3eda11609a47a5cc1eb3e43c601b384c1f0004aebd2a6ea2f49f6cf",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9e4d68cc612b25226e1346e6f67033dec221742bdf5899b92a6f8cfb399b5d81",
-				"dweb:/ipfs/QmdZNAfBQmUghvZ3Ef2yW9D873WjL3cAosa9YQeV3Av527"
+				"bzz-raw://e1efca4c7ecdbe682e88b297a4e4c544f421d3cb6e6471fafb7700c6bb5965fd",
+				"dweb:/ipfs/QmQ2ASaXYZQbc8cWZHPycBLmCNiQvJxoAHtBY353cUgKzT"
 			]
 		}
 	},
