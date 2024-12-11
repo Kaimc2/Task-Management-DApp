@@ -28,8 +28,13 @@ contract DIDRegistry {
 
     struct Credential {
         address issuer;
+        int salary;
         string role;
-        bytes32 hashed;
+
+        bytes32 fullHash;
+        bytes32 roleHash;
+        bytes32 salaryHash;
+        bytes32 salary300Hash;
         uint256 issueAt;
     }
 
@@ -59,7 +64,9 @@ contract DIDRegistry {
     event DIDCreated(address indexed owner, string identifier);
     event MetadataCreated(address indexed  owner, string name, string email, string profilePicture);
     event RoleAssigned(address indexed user, string role);
-    event RoleIssued(address indexed issuer, address user, string role, bytes32 roleHash);
+    event CredentialIssued(address indexed issuer, address user, int salary, string role, bytes32 roleHash);
+    event RoleVerified(address indexed issuer, string role, bool status);
+    event SalaryVerified(address indexed issuer, int salary, bool status);
 
     function createDID(string memory _identifier) public {
         require(bytes(_identifier).length > 0, "Identifier cannot be empty");
@@ -125,25 +132,31 @@ contract DIDRegistry {
         emit RoleAssigned(_user, _role); 
     }
 
-    // Similar to assignRole, It performs the same checks for an existing DID and non-empty role. This is used for verify user's role.
-    function issueRole(address _user, string memory _role) onlyManager public {
+    // Similar to assignRole, It performs the same checks for an existing DID and non-empty role. This is used for verify user's credentials.
+    function issueCredential(address _user, string memory _role, int _salary) onlyManager public {
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
         require(bytes(_role).length > 0, "Role cannot be empty");
 
         // generates a unique roleHash
+        bytes32 fullHash = keccak256(abi.encodePacked(msg.sender, _user, _salary, _role, block.timestamp));
         bytes32 roleHash = keccak256(abi.encodePacked(msg.sender, _user, _role, block.timestamp));
+        bytes32 salaryHash = keccak256(abi.encodePacked(msg.sender, _user, _salary, block.timestamp));
+        bytes32 salary300Hash = keccak256(abi.encodePacked(msg.sender, _user, _salary > 300, block.timestamp));
 
         // store the new Credential in the Credentials array for the user
         credentials[_user].push(Credential(
             msg.sender,
+            _salary,
             _role,
+            fullHash,
             roleHash,
+            salaryHash,
+            salary300Hash,
             block.timestamp
         ));
         roleHistory[_user].push(_role);
 
-        // RoleIssued event is emitted to log the issuance at here
-        emit RoleIssued(msg.sender, _user, _role, roleHash); 
+        emit CredentialIssued(msg.sender, _user, _salary, _role, roleHash); 
     }
 
     // This function allows a user to retrieve their assigned roles. If the user has no roles assigned, it throws an error.
@@ -158,6 +171,44 @@ contract DIDRegistry {
 
         // if you didn't get 0, return that array. 
         return userRoles;
+    }
+
+    // Verify user role
+    function verifyRole(address _user, address _issuer, string memory _role) public returns (bool) {
+        require(dids[_user].owner != address(0), "No existing DID found for this user");
+        require(credentials[_user].length > 0, "User does not have any credential");
+
+        // Grab latest user credential
+        Credential memory latestCredential = credentials[_user][credentials[_user].length - 1];
+
+        // Grab the stored hash from credential
+        bytes32 storedRoleHash = latestCredential.roleHash;
+
+        // Hash the role with user inputs
+        bytes32 roleHash = keccak256(abi.encodePacked(_issuer, _user, _role, latestCredential.issueAt));
+
+        bool status = storedRoleHash == roleHash;
+        emit RoleVerified(_issuer, _role, status);
+        return status;
+    }
+
+    function verifySalary(address _user, address _issuer, int _salary) public returns (bool) {
+        require(dids[_user].owner != address(0), "No existing DID found for this user");
+        require(credentials[_user].length > 0, "User does not have any credential");
+
+        // Grab latest user credential
+        Credential[] memory userCredentials = credentials[_user];
+
+        for (uint i = 0; i < userCredentials.length; i++) {
+            if (userCredentials[i].issuer == _issuer && userCredentials[i].salary > 300) {
+                emit SalaryVerified(_issuer, _salary, true);
+                return true;
+            } else {
+                emit SalaryVerified(_issuer, _salary, false);
+            }
+        }
+
+        return false;
     }
 
     // Present a credential by hashing the provided information
