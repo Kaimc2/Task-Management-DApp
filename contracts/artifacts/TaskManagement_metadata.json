@@ -85,17 +85,23 @@
 					{
 						"indexed": true,
 						"internalType": "address",
-						"name": "assignee",
+						"name": "issuer",
 						"type": "address"
 					},
 					{
 						"indexed": false,
-						"internalType": "uint256",
-						"name": "taskID",
-						"type": "uint256"
+						"internalType": "string",
+						"name": "role",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "status",
+						"type": "bool"
 					}
 				],
-				"name": "TaskCompleted",
+				"name": "RoleVerified",
 				"type": "event"
 			},
 			{
@@ -110,17 +116,124 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "taskID",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"name": "TaskCompleted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "issuer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "assignee",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"name": "TaskCreated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
-						"internalType": "string",
-						"name": "taskName",
-						"type": "string"
+						"internalType": "bool",
+						"name": "isValid",
+						"type": "bool"
 					}
 				],
-				"name": "TaskCreated",
+				"name": "TaskDueDateVerified",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "assignee",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isOwner",
+						"type": "bool"
+					}
+				],
+				"name": "TaskOwnershipVerified",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "issuer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "newAssignee",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"name": "TaskReassigned",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isComplete",
+						"type": "bool"
+					}
+				],
+				"name": "TaskStatusVerified",
 				"type": "event"
 			},
 			{
@@ -145,7 +258,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_taskId",
+						"name": "_id",
 						"type": "uint256"
 					}
 				],
@@ -171,7 +284,7 @@
 				"inputs": [
 					{
 						"internalType": "string",
-						"name": "_name",
+						"name": "_title",
 						"type": "string"
 					},
 					{
@@ -180,9 +293,9 @@
 						"type": "string"
 					},
 					{
-						"internalType": "uint256",
+						"internalType": "enum TaskManagement.Priority",
 						"name": "_priority",
-						"type": "uint256"
+						"type": "uint8"
 					},
 					{
 						"internalType": "uint256",
@@ -245,7 +358,7 @@
 							},
 							{
 								"internalType": "string",
-								"name": "name",
+								"name": "title",
 								"type": "string"
 							},
 							{
@@ -254,9 +367,9 @@
 								"type": "string"
 							},
 							{
-								"internalType": "uint256",
+								"internalType": "enum TaskManagement.Priority",
 								"name": "priority",
-								"type": "uint256"
+								"type": "uint8"
 							},
 							{
 								"internalType": "uint256",
@@ -300,7 +413,7 @@
 							},
 							{
 								"internalType": "string",
-								"name": "name",
+								"name": "title",
 								"type": "string"
 							},
 							{
@@ -309,9 +422,64 @@
 								"type": "string"
 							},
 							{
-								"internalType": "uint256",
+								"internalType": "enum TaskManagement.Priority",
 								"name": "priority",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint256",
+								"name": "dueDate",
 								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "assignedTo",
+								"type": "address"
+							},
+							{
+								"internalType": "bool",
+								"name": "isCompleted",
+								"type": "bool"
+							},
+							{
+								"internalType": "uint256",
+								"name": "completedAt",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct TaskManagement.Task[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getUserTasks",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "title",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "enum TaskManagement.Priority",
+								"name": "priority",
+								"type": "uint8"
 							},
 							{
 								"internalType": "uint256",
@@ -361,70 +529,21 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "taskCounter",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "tasks",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "description",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "priority",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "dueDate",
+						"name": "_id",
 						"type": "uint256"
 					},
 					{
 						"internalType": "address",
-						"name": "assignedTo",
+						"name": "_newAssignee",
 						"type": "address"
-					},
-					{
-						"internalType": "bool",
-						"name": "isCompleted",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "completedAt",
-						"type": "uint256"
 					}
 				],
-				"stateMutability": "view",
+				"name": "reassignTask",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -439,11 +558,104 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_issuer",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_role",
+						"type": "string"
+					}
+				],
+				"name": "verifyRole",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					}
+				],
+				"name": "verifyTaskDueDate",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_assignee",
+						"type": "address"
+					}
+				],
+				"name": "verifyTaskOwnership",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					}
+				],
+				"name": "verifyTaskStatus",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
+			"details": "Contract to create and manage Tasks  Authors: - Kong Phirom - Hul Sambath - Prak Pichey - Him Ronald - Chhim Kakada",
 			"kind": "dev",
 			"methods": {},
+			"title": "TaskManagement",
 			"version": 1
 		},
 		"userdoc": {
@@ -469,11 +681,11 @@
 	},
 	"sources": {
 		"contracts/TaskManagement.sol": {
-			"keccak256": "0x8f98ac0a0ba4f0e66bf1d9d57eae8cc3cab7f4f55771343e41e75e83e2444eaa",
+			"keccak256": "0x95521bb70267aa9690544af89c1d9c960ebdea870e4733910d11d36582176313",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://84c86aa58f2322a5ad58beb6f3cf5d25dad5bbacd4790d7568235e89fb5ea0a6",
-				"dweb:/ipfs/QmR3NxRemQEMNnMGhDoej2BuRe2anvBp7V2eHPwFRGWTdk"
+				"bzz-raw://87da9de9d85ede7cf6f5ae2e8748597e95dc22257df81aca771525c2c8f016b2",
+				"dweb:/ipfs/QmZfThxUFRVpXcpts3Y7HLh3AphfcomuHad79Vfe7TtTGR"
 			]
 		}
 	},
