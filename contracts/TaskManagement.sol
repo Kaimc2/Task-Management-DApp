@@ -8,12 +8,10 @@ contract TaskManagement {
     }
 
     struct Task {
-        uint id;
-        string name;
+        string title;
         string description;
         uint priority;
         uint dueDate;
-        address assignedTo;
         bool isCompleted;
         uint completedAt;
     }
@@ -25,21 +23,20 @@ contract TaskManagement {
         uint256 issueAt;
     }
 
-    uint public taskCounter = 0;
     mapping(address => DID) private dids;
     mapping (address => string) private roles;
     mapping(address => string[]) private roleHistory;
     mapping(address => Credential[]) private credentials;
-    mapping(uint => Task) public tasks;
+    mapping(address => Task[]) private tasks;
 
     event DIDCreated(address indexed owner, string identifier);
     event RoleAssigned(address indexed user, string role);
     event RoleIssued(address indexed issuer, address user, string role, bytes32 roleHash);
-    event TaskCreated(address indexed assignee, uint taskID, string taskName);
-    event TaskCompleted(address indexed assignee, uint taskID);
+    event TaskCreated(address indexed issuer, address assignee, string taskName);
+    event TaskCompleted(address indexed assignee, string taskName);
 
     // Ensures that the caller has the "manager" role.
-    modifier onlyManager {
+    modifier onlyManager() {
         require(keccak256(bytes(roles[msg.sender])) == keccak256(bytes("manager")), "Unauthorized action");
         _;
     }
@@ -124,65 +121,50 @@ contract TaskManagement {
         return userRoles;
     }
 
-    function getTasks() public view returns (Task[] memory) {
-        require(dids[msg.sender].owner == address(0), "DID already exists for this address");
-
-        Task[] memory userTasks = new Task[](taskCounter);
-        uint index = 0;
-
-        for (uint i = 0; i < taskCounter; i++) 
-        {
-            if (msg.sender == tasks[i].assignedTo) {
-                userTasks[index] = tasks[i];
-                index++;
-            }
-        }
-
-        return userTasks;
-    }
-
-    function getTask(uint _id) public view returns (
-        Task memory
-    ) {
-        require(dids[msg.sender].owner == address(0), "DID already exists for this address");
-
-        Task storage task = tasks[_id];
-        require(msg.sender == task.assignedTo, "Not authorized");
-
-        return task;
-    }
-
     function createTask(
-        string memory _name,
+        string memory _title,
         string memory _description,
+        address _assignedTo,
         uint _priority,
-        uint _dueDate,
-        address _assignedTo
+        uint _dueDate
     ) onlyManager public {
-        require(dids[msg.sender].owner == address(0), "DID already exists for this address");
-        require(bytes(_name).length > 0, "Name cannot be empty");
+        require(dids[msg.sender].owner != address(0), "No DID found for this address");
+        require(bytes(_title).length > 0, "Title cannot be empty");
         require(bytes(_description).length > 0, "Description cannot be empty");
 
         // Create new task for the assignee
-        tasks[taskCounter] = Task(taskCounter, _name, _description, _priority, _dueDate, _assignedTo, false, 0);
-        emit TaskCreated(_assignedTo, taskCounter, _name);
+        tasks[_assignedTo].push(Task(_title, _description, _priority, _dueDate, false, 0));
+        emit TaskCreated(msg.sender, _assignedTo, _title);
+    }
 
-        // Increment the task amounts
-        taskCounter++;
+    function getTasks() public view returns (Task[] memory) {
+        require(dids[msg.sender].owner != address(0), "No DID found for this address");
+        require(tasks[msg.sender].length > 0, "You have no tasks");
+
+        return tasks[msg.sender];
+    }
+
+    function getTask(uint _taskId) public view returns (
+        Task memory
+    ) {
+        require(dids[msg.sender].owner != address(0), "No DID found for this address");
+        require(_taskId < tasks[msg.sender].length, "Task not found");
+
+        return tasks[msg.sender][_taskId];
     }
 
     function completeTask(uint _taskId) public {
-        require(dids[msg.sender].owner == address(0), "DID already exists for this address");
+        require(dids[msg.sender].owner != address(0), "No DID found for this address");
+        require(_taskId < tasks[msg.sender].length, "Task not found");
 
         // Fetch the task by it ID
-        Task storage task = tasks[_taskId];
-        require(msg.sender == task.assignedTo, "Not authorized");
+        Task storage task = tasks[msg.sender][_taskId];
         require(!task.isCompleted, "Task already completed");
 
         // Update the status of the task to completed
         task.isCompleted = true;
         task.completedAt = block.timestamp;
 
-        emit TaskCompleted(task.assignedTo, task.id);
+        emit TaskCompleted(msg.sender, task.title);
     }
 }
