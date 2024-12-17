@@ -174,7 +174,6 @@ contract TaskManagement {
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
         require(bytes(_title).length > 0, "Title cannot be empty");
         require(bytes(_description).length > 0, "Description cannot be empty");
-        require(_priority <= Priority.High, "Priority out of range (Low: 0, Medium: 1, High: 2)");
         require(_dueDate > block.timestamp, "Due date must be in the future");
 
         // Create new task for the assignee
