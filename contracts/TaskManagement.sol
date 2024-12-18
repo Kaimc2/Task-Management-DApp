@@ -189,6 +189,7 @@ contract TaskManagement {
     function reassignTask(uint _id, address _newAssignee) onlyManager public {
         require(dids[msg.sender].owner != address(0), "No existing DID found for this address");
         require(tasks[_id].assignedTo != _newAssignee, "This task already belonged to the user");
+        require(!tasks[_id].isCompleted, "Task already completed");
 
         address oldAssignee = tasks[_id].assignedTo;
 

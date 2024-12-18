@@ -681,11 +681,11 @@
 	},
 	"sources": {
 		"contracts/TaskManagement.sol": {
-			"keccak256": "0xe13aba3f30bcf8a2b44b9c720edbce65e102e491110605dcba2a8e6815b36e73",
+			"keccak256": "0x0f54c057904c412646d229ded077c87a235a0191288929ce2c14ca21a9718ad6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8e967894e83ef46cbd751b8adb6cb55ee864c514b5bc1e7d7295a7507cb8a3bb",
-				"dweb:/ipfs/QmQu3CxDqsBYf1RtsqGrH3Fz1FUt6dpzjHthaof7d85F3B"
+				"bzz-raw://16a48505f33d54dba8fbf604ee4f4eaa7cae8118b67ed5d93ddbbd4cbaa16c40",
+				"dweb:/ipfs/QmXQy7jUaij4kY4pfTwDYuutM4SjCWZ2TqtuDGgPw6UYhZ"
 			]
 		}
 	},
